@@ -23,12 +23,10 @@ export const getCreateVMAction = (
   t: TFunction,
   navigate: NavigateFunction,
   namespace: string,
-  setProject: (project: string) => void,
   cluster?: string,
 ): ActionDropdownItemType => {
   return {
     cta: () => {
-      setProject(namespace);
       navigate(getVMWizardURL(cluster, namespace));
     },
     id: 'create-vm',

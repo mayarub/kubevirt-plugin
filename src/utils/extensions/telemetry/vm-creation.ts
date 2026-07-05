@@ -2,7 +2,7 @@ import { isCommonTemplate, Template } from '@kubevirt-utils/resources/template';
 import {
   VMCreationMethod,
   VMWizardStep,
-} from '@virtualmachines/creation-wizard-new/utils/constants';
+} from '@virtualmachines/creation-wizard/utils/constants';
 
 import { logTaskErrorLogged, logTaskProficiencyMeasured } from './learning';
 import { eventMonitor, getTelemetryErrorMessage } from './telemetry';

@@ -1,0 +1,36 @@
+import React, { FC, ReactNode, useEffect } from 'react';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+
+import useActiveNamespace from '@kubevirt-utils/hooks/useActiveNamespace';
+import { getValidNamespace } from '@kubevirt-utils/utils/utils';
+import useClusterParam from '@multicluster/hooks/useClusterParam';
+import { createInitialVMWizardFormValues } from '@virtualmachines/creation-wizard/state/vm-wizard-form/consts';
+import { VMWizardFormValues } from '@virtualmachines/creation-wizard/state/vm-wizard-form/types';
+import { clearVMStores } from '@virtualmachines/creation-wizard/utils/utils';
+
+type VMWizardProviderProps = {
+  children?: ReactNode;
+};
+
+export const VMWizardProvider: FC<VMWizardProviderProps> = ({ children }) => {
+  const clusterParam = useClusterParam();
+  const activeNamespace = useActiveNamespace();
+  const namespace = getValidNamespace(activeNamespace);
+  const methods = useForm<VMWizardFormValues>({
+    defaultValues: createInitialVMWizardFormValues({ cluster: clusterParam ?? '', namespace }),
+  });
+
+  useEffect(() => () => clearVMStores(), []);
+
+  return <FormProvider {...methods}>{children}</FormProvider>;
+};
+
+export const useVMWizard = () => {
+  const context = useFormContext<VMWizardFormValues>();
+
+  if (!context?.control) {
+    throw new Error('useVMWizard must be used within VMWizardProvider');
+  }
+
+  return context;
+};

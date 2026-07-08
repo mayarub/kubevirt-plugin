@@ -6,7 +6,7 @@ import {
   UserModel,
 } from '@kubevirt-ui-ext/kubevirt-api/console';
 import { IoK8sApiCoreV1ConfigMap } from '@kubevirt-ui-ext/kubevirt-api/kubernetes';
-import { operatorNamespaceSignal } from '@kubevirt-utils/store/operatorNamespace';
+import { operatorNamespaceSignal } from '@kubevirt-utils/signals/operatorNamespace';
 import { isEmpty } from '@kubevirt-utils/utils/utils';
 import useK8sWatchData from '@multicluster/hooks/useK8sWatchData';
 

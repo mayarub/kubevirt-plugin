@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { logITFlowEvent } from '@kubevirt-utils/extensions/telemetry/telemetry';
 import { CUSTOMIZE_VM_BUTTON_CLICKED } from '@kubevirt-utils/extensions/telemetry/utils/constants';
-import { vmSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import { customizeWizardVMSignal } from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import useGenerateVM from '@virtualmachines/creation-wizard/steps/InstanceTypesSteps/hooks/useGenerateVM/useGenerateVM';
 
 type UseCreateVMFromInstanceType = () => () => Promise<void>;
@@ -17,8 +17,8 @@ const useCreateVMFromInstanceType: UseCreateVMFromInstanceType = () => {
     setError(null);
 
     try {
-      vmSignal.value = generatedVM;
-      logITFlowEvent(CUSTOMIZE_VM_BUTTON_CLICKED, vmSignal.value);
+      customizeWizardVMSignal.value = generatedVM;
+      logITFlowEvent(CUSTOMIZE_VM_BUTTON_CLICKED, customizeWizardVMSignal.value);
     } catch (err) {
       setError(err);
     } finally {

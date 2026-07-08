@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { setCustomizeWizardVMSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import { setCustomizeWizardVMSignal } from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import { WizardStepType } from '@patternfly/react-core';
 import useCreateVMFromTemplate from '@virtualmachines/creation-wizard-new/steps/TemplateStep/hooks/useCreateVMFromTemplate';
 import {

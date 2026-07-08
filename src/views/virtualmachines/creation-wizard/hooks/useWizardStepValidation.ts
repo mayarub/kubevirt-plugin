@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import { vmSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import { customizeWizardVMSignal } from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import { isEmpty } from '@kubevirt-utils/utils/utils';
 import { isDNS1123Label } from '@kubevirt-utils/utils/validation';
 import { useSignals } from '@preact/signals-react/runtime';
@@ -33,7 +33,7 @@ const useWizardStepValidation = (): WizardStepValidation => {
   const isUserProvided =
     Boolean(selectedInstanceType?.namespace) && Boolean(selectedInstanceType?.name);
 
-  const currentVMSignalValue = vmSignal.value;
+  const currentVMSignalValue = customizeWizardVMSignal.value;
 
   const isValidVMName = isCloneCreationMethod(creationMethod) || isDNS1123Label(vmName);
 

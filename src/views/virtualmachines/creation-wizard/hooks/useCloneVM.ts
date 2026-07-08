@@ -13,7 +13,7 @@ import {
 import { useKubevirtTranslation } from '@kubevirt-utils/hooks/useKubevirtTranslation';
 import { getName, getNamespace } from '@kubevirt-utils/resources/shared';
 import { RUNSTRATEGY_HALTED } from '@kubevirt-utils/resources/vm/utils/constants';
-import { vmSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import { customizeWizardVMSignal } from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import { getCluster } from '@multicluster/helpers/selectors';
 import { getVMURL } from '@multicluster/urls';
 import useVMWizardStore from '@virtualmachines/creation-wizard/state/vm-wizard-store/useVMWizardStore';
@@ -25,7 +25,7 @@ const useCloneVM: UseCloneVM = () => {
   const navigate = useNavigate();
   const { cluster, project: targetNamespace, vmDescription, vmName } = useVMWizardStore();
 
-  const source = vmSignal.value;
+  const source = customizeWizardVMSignal.value;
 
   const [initialCloneRequest, setInitialCloneRequest] = useState<V1beta1VirtualMachineClone>();
 
@@ -54,7 +54,7 @@ const useCloneVM: UseCloneVM = () => {
         source,
         vmName,
         targetNamespace,
-        vmSignal.value?.spec?.runStrategy !== RUNSTRATEGY_HALTED,
+        customizeWizardVMSignal.value?.spec?.runStrategy !== RUNSTRATEGY_HALTED,
         vmDescription,
       );
 

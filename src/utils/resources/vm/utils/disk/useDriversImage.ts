@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { getDriversImage } from '@kubevirt-utils/resources/vm/utils/disk/drivers';
-import { driverImage, loadingDriver } from '@kubevirt-utils/store/drivers';
+import { driverImage, loadingDriver } from '@kubevirt-utils/signals/drivers';
 import useClusterParam from '@multicluster/hooks/useClusterParam';
 
 export const useDriversImage = (): [string, boolean] => {

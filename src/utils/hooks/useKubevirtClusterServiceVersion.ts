@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { SubscriptionModelGroupVersionKind } from '@kubevirt-ui-ext/kubevirt-api/console';
 import { KUBEVIRT_HYPERCONVERGED } from '@kubevirt-utils/constants/constants';
 import { ClusterServiceVersionModelGroupVersionKind } from '@kubevirt-utils/models';
-import { operatorNamespaceSignal } from '@kubevirt-utils/store/operatorNamespace';
+import { operatorNamespaceSignal } from '@kubevirt-utils/signals/operatorNamespace';
 import { isEmpty } from '@kubevirt-utils/utils/utils';
 import useK8sWatchData from '@multicluster/hooks/useK8sWatchData';
 import { ClusterServiceVersionKind, SubscriptionKind } from '@overview/utils/types';

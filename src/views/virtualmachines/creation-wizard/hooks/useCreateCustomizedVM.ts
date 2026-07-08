@@ -1,6 +1,6 @@
+import produce from 'immer';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import produce from 'immer';
 
 import { VirtualMachineModel } from '@kubevirt-ui-ext/kubevirt-api/console';
 import { logITFlowEvent } from '@kubevirt-utils/extensions/telemetry/telemetry';
@@ -24,7 +24,10 @@ import { t } from '@kubevirt-utils/hooks/useKubevirtTranslation';
 import { getName } from '@kubevirt-utils/resources/shared';
 import useNamespaceUDN from '@kubevirt-utils/resources/udn/hooks/useNamespaceUDN';
 import { removePodNetworkFromVM } from '@kubevirt-utils/resources/vm/utils/network/utils';
-import { clearCustomizeInstanceType, vmSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import {
+  customizeWizardVMSignal,
+  setCustomizeWizardVMSignal,
+} from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import { createHeadlessService } from '@kubevirt-utils/utils/headless-service';
 import { getErrorMessage, kubevirtConsole } from '@kubevirt-utils/utils/utils';
 import useClusterParam from '@multicluster/hooks/useClusterParam';
@@ -59,7 +62,7 @@ const useCreateCustomizedVM: UseCreateCustomizedVM = () => {
   const createCustomizedVM = async () => {
     setIsSubmitting(true);
     setError(null);
-    const storeVM = vmSignal.value;
+    const storeVM = customizeWizardVMSignal.value;
     if (!storeVM) {
       const e = new Error('Cannot create VM: customized VM payload is empty');
       setError(e);
@@ -88,7 +91,7 @@ const useCreateCustomizedVM: UseCreateCustomizedVM = () => {
           mapCreationMethodToTelemetry(creationMethod ?? VMCreationMethod.INSTANCE_TYPE),
         );
       }
-      clearCustomizeInstanceType();
+      setCustomizeWizardVMSignal(null);
 
       if (!isUDNManagedNamespace) {
         try {

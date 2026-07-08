@@ -22,9 +22,9 @@ import { getPreferredBootmode } from '@kubevirt-utils/resources/preference/helpe
 import { asAccessReview, getAnnotation, getLabel, getName } from '@kubevirt-utils/resources/shared';
 import { DESCRIPTION_ANNOTATION, getDevices, getHostname } from '@kubevirt-utils/resources/vm';
 import {
+  customizeWizardVMSignal,
   patchCustomizeWizardVMSignal,
-  vmSignal,
-} from '@kubevirt-utils/store/customizeInstanceType';
+} from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import { OLSPromptType } from '@lightspeed/utils/prompts';
 import { K8sVerb, useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList, Grid, GridItem, Switch } from '@patternfly/react-core';
@@ -41,7 +41,7 @@ import usePreference from '../hooks/usePreference';
 const CustomizeInstanceTypeDetailsTab = () => {
   const { t } = useKubevirtTranslation();
   const { createModal } = useModal();
-  const vm = vmSignal.value;
+  const vm = customizeWizardVMSignal.value;
 
   const [preference, preferenceLoading] = usePreference(vm);
 

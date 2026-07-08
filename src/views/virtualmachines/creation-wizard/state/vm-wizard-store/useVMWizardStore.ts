@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { cancelAllWizardPendingUploads } from '@kubevirt-utils/hooks/useUploadProgressToast/cancel/cancelPendingVmUploads';
 import { Template } from '@kubevirt-utils/resources/template';
-import { clearCustomizeInstanceType } from '@kubevirt-utils/store/customizeInstanceType';
+import { setCustomizeWizardVMSignal } from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import useInstanceTypeVMStore from '@virtualmachines/creation-wizard/state/instance-type-vm-store/useInstanceTypeVMStore';
 import { initialVMWizardState } from '@virtualmachines/creation-wizard/state/vm-wizard-store/utils/state';
 import {
@@ -12,7 +12,7 @@ import {
 import { VMCreationMethod, VMWizardStep } from '@virtualmachines/creation-wizard/utils/constants';
 
 const clearWizardRelatedStores = (): void => {
-  clearCustomizeInstanceType();
+  setCustomizeWizardVMSignal(null);
   useInstanceTypeVMStore.getState().resetInstanceTypeVMState();
 };
 

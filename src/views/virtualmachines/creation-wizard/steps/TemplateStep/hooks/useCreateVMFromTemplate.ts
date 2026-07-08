@@ -12,7 +12,7 @@ import {
   LABEL_USED_TEMPLATE_NAMESPACE,
 } from '@kubevirt-utils/resources/template';
 import { getDefaultRunningStrategy } from '@kubevirt-utils/resources/vm';
-import { vmSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import { customizeWizardVMSignal } from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import useVMWizardStore from '@virtualmachines/creation-wizard/state/vm-wizard-store/useVMWizardStore';
 import { resolveVMFromTemplate } from '@virtualmachines/creation-wizard/steps/TemplateStep/hooks/utils';
 import { VM_FOLDER_LABEL } from '@virtualmachines/tree/utils/constants';
@@ -61,7 +61,7 @@ const useCreateVMFromTemplate: UseCreateVMFromTemplate = () => {
       }
       vmObject.spec.runStrategy = getDefaultRunningStrategy();
 
-      vmSignal.value = vmObject;
+      customizeWizardVMSignal.value = vmObject;
       setLastProcessedTemplateKey(selectedKey);
     } catch (error) {
       setCreateError(error);

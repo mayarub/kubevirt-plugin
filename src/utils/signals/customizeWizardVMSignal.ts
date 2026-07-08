@@ -1,15 +1,40 @@
 import produce from 'immer';
 
 import { V1VirtualMachine } from '@kubevirt-ui-ext/kubevirt-api/kubevirt';
-import { ensurePath } from '@kubevirt-utils/utils/utils';
+import { ensurePath, isEmpty } from '@kubevirt-utils/utils/utils';
 import { signal } from '@preact/signals-react';
 
-import {
-  mergeData,
-  saveCustomizeInstanceTypeSessionStorage,
-} from './customizeInstanceType/utils/utils';
+export const customizeWizardVMSignal = signal<V1VirtualMachine>(null);
 
-export const vmSignal = signal<V1VirtualMachine>(null);
+const concatArrays = (existing: any, incoming: any) => {
+  const existingArray = Array.isArray(existing) ? existing : [];
+  const incomingArray = Array.isArray(incoming) ? incoming : [];
+  return [...existingArray, ...incomingArray];
+};
+
+export const mergeVMFieldValues = (existingValue: any, incomingValue: any) => {
+  if (isEmpty(existingValue) && isEmpty(incomingValue)) {
+    return {};
+  }
+
+  if (isEmpty(existingValue)) {
+    return incomingValue;
+  }
+
+  if (isEmpty(incomingValue)) {
+    return existingValue;
+  }
+
+  if (Array.isArray(existingValue) || Array.isArray(incomingValue)) {
+    return concatArrays(existingValue, incomingValue);
+  }
+
+  if (typeof existingValue === 'object' && typeof incomingValue === 'object') {
+    return { ...existingValue, ...incomingValue };
+  }
+
+  return incomingValue;
+};
 
 // ensurePath joins array segments with "." and re-splits, which breaks keys that
 // contain dots (e.g. label "vm.openshift.io/folder") into nested objects.
@@ -20,11 +45,6 @@ const ensurePathParts = (obj: object, pathParts: string[]): void => {
     }
     return current[part];
   }, obj);
-};
-
-export const clearCustomizeInstanceType = () => {
-  vmSignal.value = null;
-  saveCustomizeInstanceTypeSessionStorage(null);
 };
 
 const parsePath = (path: string | string[]): string[] =>
@@ -43,7 +63,7 @@ const setValueAtPath = (draft: object, pathParts: string[], data: any, merge: bo
   const targetKey = pathParts.at(-1);
   const parentObject = parentPath.reduce((current, segment) => current[segment], draft as any);
 
-  parentObject[targetKey] = merge ? mergeData(parentObject[targetKey], data) : data;
+  parentObject[targetKey] = merge ? mergeVMFieldValues(parentObject[targetKey], data) : data;
 };
 
 const applyVMUpdate = (
@@ -75,11 +95,11 @@ export type PatchCustomizeWizardVMSignal = (
 ) => V1VirtualMachine;
 
 export const patchCustomizeWizardVMSignal: PatchCustomizeWizardVMSignal = (vmElementsToUpdate) => {
-  if (!vmSignal.value) {
+  if (!customizeWizardVMSignal.value) {
     return undefined;
   }
 
-  const initialVM = produce(vmSignal.value, (draft) => draft);
+  const initialVM = produce(customizeWizardVMSignal.value, (draft) => draft);
 
   const updatedVM = vmElementsToUpdate.reduce((currentVM, { data, merge = false, path }) => {
     if (path === undefined) return data;
@@ -88,14 +108,14 @@ export const patchCustomizeWizardVMSignal: PatchCustomizeWizardVMSignal = (vmEle
     return applyVMUpdate(currentVM, data, merge, path);
   }, initialVM);
 
-  vmSignal.value = updatedVM;
+  customizeWizardVMSignal.value = updatedVM;
 
-  return vmSignal.value;
+  return customizeWizardVMSignal.value;
 };
 
 export const updateVMCustomizeIT = (vm: V1VirtualMachine) =>
   Promise.resolve(patchCustomizeWizardVMSignal([{ data: vm }]));
 
 export const setCustomizeWizardVMSignal = (vm: V1VirtualMachine | null) => {
-  vmSignal.value = vm;
+  customizeWizardVMSignal.value = vm;
 };

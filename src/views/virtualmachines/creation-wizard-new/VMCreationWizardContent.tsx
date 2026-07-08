@@ -76,10 +76,10 @@ const VMCreationWizardContent: FC = () => {
     <TemplatesDrawerWrapper>
       <Wizard
         className="vm-creation-wizard"
-        header={<WizardHeader isCloseHidden title={t('Create VirtualMachine')} />}
+        header={<WizardHeader isCloseHidden title={t('Create VirtualMachine NEWWWWWW')} />}
         onClose={closeWizard}
         onStepChange={(_, currentStep, prevStep) => onStepChange(currentStep, prevStep)}
-        title={t('Create VirtualMachine')}
+        title={t('Create VirtualMachine NEWWWWWW')}
       >
         {stepsToDisplay?.map(({ children, footer, id, isDisabled, name, navItem }) => (
           <WizardStep

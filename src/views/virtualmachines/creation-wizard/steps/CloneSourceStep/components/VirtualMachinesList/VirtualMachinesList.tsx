@@ -29,7 +29,10 @@ import { usePVCMapper } from '@kubevirt-utils/hooks/usePVCMapper';
 import { getDescription, getName, getNamespace } from '@kubevirt-utils/resources/shared';
 import useVirtualMachineInstanceMigrationMapper from '@kubevirt-utils/resources/vmim/hooks/useVirtualMachineInstanceMigrationMapper';
 import useVirtualMachineInstanceMigrations from '@kubevirt-utils/resources/vmim/hooks/useVirtualMachineInstanceMigrations';
-import { clearCustomizeInstanceType, vmSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import {
+  customizeWizardVMSignal,
+  setCustomizeWizardVMSignal,
+} from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import { isVM } from '@kubevirt-utils/utils/typeGuards';
 import { truncateToK8sName } from '@kubevirt-utils/utils/utils';
 import { getCluster } from '@multicluster/helpers/selectors';
@@ -113,7 +116,7 @@ const VirtualMachinesList = forwardRef(({}, ref) => {
 
   // Clear selection when namespace/cluster changes
   useEffect(() => {
-    clearCustomizeInstanceType();
+    setCustomizeWizardVMSignal(null);
   }, [cluster, targetNamespace]);
 
   useImperativeHandle(
@@ -216,7 +219,7 @@ const VirtualMachinesList = forwardRef(({}, ref) => {
     const name = truncateToK8sName(isVM(vm) ? `${sourceVMName}-clone` : sourceVMName);
     setVMName(name);
     setVMDescription(getDescription(vm));
-    vmSignal.value = vm;
+    customizeWizardVMSignal.value = vm;
   };
 
   return (
@@ -269,7 +272,7 @@ const VirtualMachinesList = forwardRef(({}, ref) => {
         data={paginatedData}
         loaded={loaded}
         loadError={vmsLoadError}
-        selectedVMState={[vmSignal.value, setVM]}
+        selectedVMState={[customizeWizardVMSignal.value, setVM]}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ConfigMapModel } from '@kubevirt-ui-ext/kubevirt-api/console';
-import { operatorNamespaceSignal } from '@kubevirt-utils/store/operatorNamespace';
+import { operatorNamespaceSignal } from '@kubevirt-utils/signals/operatorNamespace';
 import useClusterParam from '@multicluster/hooks/useClusterParam';
 import { kubevirtK8sPatch } from '@multicluster/k8sRequests';
 

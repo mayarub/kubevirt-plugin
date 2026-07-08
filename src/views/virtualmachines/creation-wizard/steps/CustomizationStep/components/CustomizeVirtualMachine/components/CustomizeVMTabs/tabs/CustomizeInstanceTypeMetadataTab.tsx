@@ -6,13 +6,15 @@ import DescriptionItemLabels from '@kubevirt-utils/components/DescriptionItem/co
 import Loading from '@kubevirt-utils/components/Loading/Loading';
 import SearchItem from '@kubevirt-utils/components/SearchItem/SearchItem';
 import { useKubevirtTranslation } from '@kubevirt-utils/hooks/useKubevirtTranslation';
-import { patchCustomizeWizardVMSignal } from '@kubevirt-utils/store/customizeInstanceType';
-import { vmSignal } from '@kubevirt-utils/store/customizeInstanceType';
+import {
+  customizeWizardVMSignal,
+  patchCustomizeWizardVMSignal,
+} from '@kubevirt-utils/signals/customizeWizardVMSignal';
 import { DescriptionList, Grid, PageSection, Title } from '@patternfly/react-core';
 
 const CustomizeInstanceTypeMetadataTab = () => {
   const { t } = useKubevirtTranslation();
-  const vm = vmSignal.value;
+  const vm = customizeWizardVMSignal.value;
 
   if (!vm) {
     return <Loading />;

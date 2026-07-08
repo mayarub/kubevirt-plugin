@@ -4,7 +4,7 @@ import { HyperConvergedModelGroupVersionKind } from '@kubevirt-ui-ext/kubevirt-a
 import { V1LabelSelector } from '@kubevirt-ui-ext/kubevirt-api/containerized-data-importer';
 import { V1MigrationConfiguration } from '@kubevirt-ui-ext/kubevirt-api/kubevirt';
 import { CalculationMethod } from '@kubevirt-utils/resources/quotas/types';
-import { operatorNamespaceSignal } from '@kubevirt-utils/store/operatorNamespace';
+import { operatorNamespaceSignal } from '@kubevirt-utils/signals/operatorNamespace';
 import { isEmpty } from '@kubevirt-utils/utils/utils';
 import useK8sWatchData from '@multicluster/hooks/useK8sWatchData';
 import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';

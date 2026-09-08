@@ -1,8 +1,7 @@
-import { ComponentType } from 'react';
+import { type ComponentType } from 'react';
+import { type TFunction } from 'i18next';
 
-import { TFunction } from 'i18next';
-
-import { HyperConverged } from '@kubevirt-utils/hooks/useHyperConvergeConfiguration';
+import { type HyperConverged } from '@kubevirt-utils/hooks/useHyperConvergeConfiguration';
 import TemplatesAndImagesManagement from '@settings/tabs/ClusterTab/components/GeneralSettings/TemplatesAndImagesManagement/TemplatesAndImagesManagement';
 import VMActionsConfirmation from '@settings/tabs/ClusterTab/components/GeneralSettings/VMActionsConfirmation/VMActionsConfirmation';
 
@@ -11,13 +10,11 @@ import AutomaticallyGrantVirtualizationRoles from '../AutomaticallyGrantVirtuali
 import HideYamlTab from '../HideYamlTab/HideYamlTab';
 import LiveMigrationSection from '../LiveMigrationSection/LiveMigrationSection';
 import MemoryDensity from '../MemoryDensity/MemoryDensity';
-import KernelSamepageMerging from '../MemoryDensity/components/KernelSamepageMerging/KernelSamepageMerging';
 import SSHConfiguration from '../SSHConfiguration/SSHConfiguration';
 
 export const getGeneralSettingsLabels = (t: TFunction) => ({
   advancedCDROMFeatures: t('Advanced CD-ROM features'),
   automaticallyGrantVirtualizationRoles: t('Automatically grant Virtualization roles'),
-  kernelSamepageMerging: t('Kernel Samepage Merging (KSM)'),
   liveMigration: t('Live migration'),
   memoryRequestRatio: t('Memory request ratio'),
   sshConfigurations: t('SSH configurations'),
@@ -44,7 +41,6 @@ export const getGeneralSettingsSections = (t: TFunction): GeneralSettingsSection
       Component: AutomaticallyGrantVirtualizationRoles,
       label: labels.automaticallyGrantVirtualizationRoles,
     },
-    { Component: KernelSamepageMerging, label: labels.kernelSamepageMerging },
     { Component: LiveMigrationSection, label: labels.liveMigration },
     { Component: MemoryDensity, label: labels.memoryRequestRatio },
     { Component: SSHConfiguration, label: labels.sshConfigurations },

@@ -1,12 +1,13 @@
-/* eslint-disable */
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 
 import EditButton from '@kubevirt-utils/components/EditButton/EditButton';
 import { useModal } from '@kubevirt-utils/components/ModalProvider/ModalProvider';
-import { HyperConverged } from '@kubevirt-utils/hooks/useHyperConvergeConfiguration';
-import { CalculationMethod } from '@kubevirt-utils/resources/quotas/types';
+import { type HyperConverged } from '@kubevirt-utils/hooks/useHyperConvergeConfiguration';
+import { useKubevirtTranslation } from '@kubevirt-utils/hooks/useKubevirtTranslation';
+import { type CalculationMethod } from '@kubevirt-utils/resources/quotas/types';
+import { Tooltip, TooltipPosition } from '@patternfly/react-core';
 
-import { CalculationMethodContentMapper } from '../types';
+import { type CalculationMethodContentMapper } from '../types';
 
 import EditCalculationMethodModal from './EditCalculationMethodModal';
 
@@ -21,9 +22,8 @@ const EditCalculationMethodButton: FC<EditCalculationMethodButtonProps> = ({
   hyperConverge,
   selectedCalculationMethod,
 }) => {
+  const { t } = useKubevirtTranslation();
   const { createModal } = useModal();
-
-  const selectedLabel = calculationMethodContentMapper[selectedCalculationMethod]?.label;
 
   const onClick = () => {
     createModal(({ isOpen, onClose }) => (
@@ -37,7 +37,11 @@ const EditCalculationMethodButton: FC<EditCalculationMethodButtonProps> = ({
     ));
   };
 
-  return <EditButton onClick={onClick}>{selectedLabel}</EditButton>;
+  return (
+    <Tooltip content={t('Edit quota calculation method')} position={TooltipPosition.right}>
+      <EditButton ariaLabel={t('Edit quota calculation method')} onClick={onClick} />
+    </Tooltip>
+  );
 };
 
 export default EditCalculationMethodButton;

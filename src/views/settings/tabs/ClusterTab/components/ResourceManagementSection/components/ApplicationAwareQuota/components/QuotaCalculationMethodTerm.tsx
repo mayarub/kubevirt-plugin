@@ -19,7 +19,7 @@ const QuotaCalculationMethodTerm: FC<QuotaCalculationMethodTermProps> = ({
   const { t } = useKubevirtTranslation();
 
   return (
-    <div className="pf-v6-u-font-weight-bold pf-v6-u-ml-sm">
+    <span className="pf-v6-u-mr-sm">
       {t('Quota calculation method')}
       <HelpTextIcon
         bodyContent={(hide) => (
@@ -43,7 +43,7 @@ const QuotaCalculationMethodTerm: FC<QuotaCalculationMethodTermProps> = ({
         )}
         helpIconClassName="pf-v6-u-ml-sm"
       />
-    </div>
+    </span>
   );
 };
 

@@ -53,7 +53,9 @@ const AutoComputeCPULimits: FC<AutoComputeCPULimitsProps> = ({
         isLoading={isLoading}
         newBadge={newBadge}
         switchIsOn={featureEnabled}
-        title={t('Auto-compute CPU and memory limits')}
+        title={
+          <span className="pf-v6-u-font-weight-bold">{t('Auto-compute CPU and memory limits')}</span>
+        }
         turnOnSwitch={onFeatureChange}
       />
       {error && (

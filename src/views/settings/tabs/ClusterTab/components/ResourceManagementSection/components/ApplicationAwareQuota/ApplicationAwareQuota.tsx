@@ -83,7 +83,9 @@ const ApplicationAwareQuota: FC<ApplicationAwareQuotaProps> = ({
         newBadge={newBadge}
         olsPromptType={OLSPromptType.APPLICATION_AWARE_QUOTA}
         switchIsOn={isEnabled}
-        title={t('Application Aware Quota (AAQ)')}
+        title={
+          <span className="pf-v6-u-font-weight-bold">{t('Application Aware Quota (AAQ)')}</span>
+        }
         turnOnSwitch={onFeatureChange}
       />
       {error && (
@@ -93,7 +95,7 @@ const ApplicationAwareQuota: FC<ApplicationAwareQuotaProps> = ({
       )}
       {isEnabled && (
         <>
-          <Flex className="pf-v6-u-mt-sm pf-v6-u-mb-xs" spaceItems={{ default: 'spaceItems2xl' }}>
+          <Flex className="pf-v6-u-mt-sm pf-v6-u-mb-xs" gap={{ default: 'gapSm' }}>
             <QuotaCalculationMethodTerm
               calculationMethodContentMapper={calculationMethodContentMapper}
             />

@@ -89,6 +89,7 @@ export const getClusterNamesToDisplayInTree = ({
 
 export const buildClusterSetTreeSingleNode = ({
   children,
+  clusterNamesInSet,
   clusterSetName,
   defaultExpanded,
   queryParams,
@@ -99,7 +100,10 @@ export const buildClusterSetTreeSingleNode = ({
     children,
     defaultExpanded,
     hasBadge: false,
-    href: `${getACMVMListURL()}${buildTreeItemQuery({ query: queryParams })}`,
+    href: `${getACMVMListURL()}${buildTreeItemQuery({
+      clusters: clusterNamesInSet,
+      query: queryParams,
+    })}`,
     icon: createElement(ClusterSetTreeIcon, { t }),
     id: getClusterSetTreeViewItemID(clusterSetName),
     name: clusterSetName,

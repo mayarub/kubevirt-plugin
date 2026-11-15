@@ -1,10 +1,12 @@
 import { ALL_NAMESPACES, ALL_NAMESPACES_SESSION_KEY } from '@kubevirt-utils/hooks/constants';
 import { SINGLE_CLUSTER_KEY } from '@kubevirt-utils/resources/constants';
 import { isSystemNamespace } from '@kubevirt-utils/resources/namespace/helper';
+import { CLUSTER_LIST_FILTER_TYPE } from '@kubevirt-utils/utils/constants';
 import { isEmpty } from '@kubevirt-utils/utils/utils';
 import { getVMListURL } from '@multicluster/urls';
 import { VirtualMachineRowFilterType } from '@virtualmachines/utils';
 
+import { getClusterSetTreeItemMatchingClusterFilters } from '../../utils/clusterSetTreeSelection';
 import { ALL_CLUSTERS_ID, FOLDER_SELECTOR_PREFIX, SHOW } from '../../utils/constants';
 import {
   getClusterTreeViewItemID,
@@ -42,6 +44,42 @@ export const getProjectTreeItem = (
 ): TreeViewDataItemWithHref | undefined =>
   dataMap?.[getProjectTreeViewItemID(clusterKey, namespace)];
 
+const selectFleetLevelTreeItem = (
+  dataMap: Record<string, TreeViewDataItemWithHref>,
+  searchParams: URLSearchParams,
+  selectedId: string | undefined,
+  setSelected: (item: TreeViewDataItemWithHref) => void,
+): void => {
+  const clusterFilterValues = searchParams.getAll(CLUSTER_LIST_FILTER_TYPE).filter(Boolean);
+  const clusterSetTreeItem = getClusterSetTreeItemMatchingClusterFilters(
+    dataMap,
+    clusterFilterValues,
+  );
+
+  if (clusterSetTreeItem) {
+    if (selectedId !== clusterSetTreeItem.id) {
+      setSelected(clusterSetTreeItem);
+    }
+    return;
+  }
+
+  const clusterFromFilters = clusterFilterValues.length === 1 ? clusterFilterValues[0] : undefined;
+  const clusterTreeItem = getClusterTreeItem(dataMap, clusterFromFilters);
+  if (clusterTreeItem && selectedId !== clusterTreeItem.id) {
+    setSelected(clusterTreeItem);
+  }
+};
+
+const selectTreeItemIfChanged = (
+  treeItem: TreeViewDataItemWithHref | undefined,
+  selectedId: string | undefined,
+  setSelected: (item: TreeViewDataItemWithHref) => void,
+): void => {
+  if (treeItem && selectedId !== treeItem.id) {
+    setSelected(treeItem);
+  }
+};
+
 export const selectACMTreeItem = (
   dataMap: Record<string, TreeViewDataItemWithHref>,
   cluster: string | undefined,
@@ -53,11 +91,17 @@ export const selectACMTreeItem = (
   setSelected: (item: TreeViewDataItemWithHref) => void,
   navigate: (path: string) => void,
 ): void => {
-  if (!ns || !cluster || !loaded) {
-    const clusterTreeItem = getClusterTreeItem(dataMap, cluster);
-    if (clusterTreeItem && selectedId !== clusterTreeItem.id) {
-      setSelected(clusterTreeItem);
+  if (!loaded) {
+    return;
+  }
+
+  if (!ns || !cluster) {
+    if (!cluster && !ns) {
+      selectFleetLevelTreeItem(dataMap, searchParams, selectedId, setSelected);
+      return;
     }
+
+    selectTreeItemIfChanged(getClusterTreeItem(dataMap, cluster), selectedId, setSelected);
     return;
   }
 

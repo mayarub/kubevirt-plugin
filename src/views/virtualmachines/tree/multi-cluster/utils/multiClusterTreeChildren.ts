@@ -39,7 +39,6 @@ export const buildMultiClusterTreeChildren = (
 ): TreeViewDataItem[] => {
   const { clusterSetNamesToDisplayInTree, groupedClusterNamesByClusterSet, ungroupedClusterNames } =
     getClusterNamesToDisplayInTree(args);
-
   const clusterSetNodes = buildClusterSetTreeNodes(
     clusterSetNamesToDisplayInTree,
     groupedClusterNamesByClusterSet,

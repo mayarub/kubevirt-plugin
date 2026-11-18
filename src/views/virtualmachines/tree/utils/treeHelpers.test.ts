@@ -9,6 +9,7 @@ import {
 } from './constants';
 import {
   filterNamespaceItems,
+  getAllRightClickableTreeViewItems,
   getEffectiveShowEmptyProjects,
   isShowOnlyVMProjectsChecked,
 } from './treeHelpers';
@@ -78,5 +79,22 @@ describe('filterNamespaceItems', () => {
     };
 
     expect(filterNamespaceItems(clusterSetItem, false)).toBe(true);
+  });
+});
+
+describe('getAllRightClickableTreeViewItems', () => {
+  it('excludes cluster set and All clusters nodes from right-click actions', () => {
+    const items = getAllRightClickableTreeViewItems([
+      {
+        id: `${CLUSTER_SET_SELECTOR_PREFIX}/production`,
+        name: 'production',
+      },
+      {
+        id: `${CLUSTER_SELECTOR_PREFIX}/cluster-a`,
+        name: 'cluster-a',
+      },
+    ]);
+
+    expect(items.map((item) => item.id)).toEqual([`${CLUSTER_SELECTOR_PREFIX}/cluster-a`]);
   });
 });

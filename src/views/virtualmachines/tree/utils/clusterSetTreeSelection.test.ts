@@ -5,7 +5,7 @@ import {
   getClusterSetTreeItemMatchingClusterFilters,
   isClusterSetSelectedInQuery,
 } from './clusterSetTreeSelection';
-import { CLUSTER_SET_SELECTOR_PREFIX } from './constants';
+import { CLUSTER_SELECTOR_PREFIX, CLUSTER_SET_SELECTOR_PREFIX } from './constants';
 import { type TreeViewDataItemWithHref } from './utils';
 
 describe('clusterSetTreeSelection', () => {
@@ -22,7 +22,10 @@ describe('clusterSetTreeSelection', () => {
 
   it('getClusterSetTreeItemMatchingClusterFilters finds the set node', () => {
     const setItem: TreeViewDataItemWithHref = {
-      children: [{ name: 'cluster-a' }, { name: 'cluster-b' }],
+      children: [
+        { id: `${CLUSTER_SELECTOR_PREFIX}/cluster-a`, name: 'cluster-a' },
+        { id: `${CLUSTER_SELECTOR_PREFIX}/cluster-b`, name: 'cluster-b' },
+      ],
       id: `${CLUSTER_SET_SELECTOR_PREFIX}/production`,
       name: 'production',
     };

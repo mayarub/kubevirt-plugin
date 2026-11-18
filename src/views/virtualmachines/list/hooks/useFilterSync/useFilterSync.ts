@@ -8,10 +8,14 @@ import {
   PROJECT_LIST_FILTER_TYPE,
 } from '@kubevirt-utils/utils/constants';
 import useClusterParam from '@multicluster/hooks/useClusterParam';
-import { getACMVMListURL, getVMListURL } from '@multicluster/urls';
 import useIsACMPage from '@multicluster/useIsACMPage';
 
-import { getFleetPathToolbarFilters, getFleetQueryFilterSyncSignature, hasMismatch } from './utils';
+import {
+  getFleetPathToolbarFilters,
+  getFleetQueryFilterSyncSignature,
+  navigateToWidenedVmListPath,
+  widenUrlPathForToolbarFilters,
+} from './utils';
 
 /**
  * Unified hook that handles bidirectional sync between the URL path
@@ -41,6 +45,8 @@ const useFilterSync = (onSetFilters: OnSetFilters): void => {
     prevRef.current = { cluster, namespace };
 
     const pathChanged = prev.namespace !== namespace || prev.cluster !== cluster;
+    const projectFilterValues = searchParams.getAll(PROJECT_LIST_FILTER_TYPE).filter(Boolean);
+    const clusterFilterValues = searchParams.getAll(CLUSTER_LIST_FILTER_TYPE).filter(Boolean);
 
     if (pathChanged && pathChangedAutomaticallyRef.current) {
       pathChangedAutomaticallyRef.current = false;
@@ -49,41 +55,22 @@ const useFilterSync = (onSetFilters: OnSetFilters): void => {
 
     if (pathChanged) {
       lastFleetQueryFilterSyncRef.current = '';
-      const clusterFilterValues = searchParams.getAll(CLUSTER_LIST_FILTER_TYPE).filter(Boolean);
       onSetFilters({
         [CLUSTER_LIST_FILTER_TYPE]: cluster ? [cluster] : clusterFilterValues,
-        [PROJECT_LIST_FILTER_TYPE]: namespace ? [namespace] : [],
+        [PROJECT_LIST_FILTER_TYPE]: namespace ? [namespace] : projectFilterValues,
       });
       return;
     }
 
-    const projectFilterValues = searchParams.getAll(PROJECT_LIST_FILTER_TYPE).filter(Boolean);
-    const clusterFilterValues = searchParams.getAll(CLUSTER_LIST_FILTER_TYPE).filter(Boolean);
+    const { scope, shouldNavigate } = widenUrlPathForToolbarFilters(
+      { cluster, namespace },
+      clusterFilterValues,
+      projectFilterValues,
+    );
 
-    let targetCluster: string | undefined | null = cluster;
-    let targetNamespace: string | undefined = namespace;
-    let needsNavigation = false;
-
-    if (hasMismatch(targetCluster, clusterFilterValues)) {
-      targetCluster = undefined;
-      targetNamespace = undefined;
-      needsNavigation = true;
-    }
-
-    if (hasMismatch(targetNamespace, projectFilterValues)) {
-      targetNamespace = undefined;
-      needsNavigation = true;
-    }
-
-    if (needsNavigation) {
-      // tracks that the cluster or namespace was changed automatically by the filter sync and not by the user interacting with the tree view
+    if (shouldNavigate) {
       pathChangedAutomaticallyRef.current = true;
-
-      const pathname = isACMPage
-        ? getACMVMListURL(targetCluster, targetNamespace)
-        : getVMListURL(undefined, targetNamespace);
-
-      navigate({ pathname, search: searchParams.toString() }, { replace: true });
+      navigateToWidenedVmListPath({ isACMPage, navigate, scope, searchParams });
       return;
     }
 

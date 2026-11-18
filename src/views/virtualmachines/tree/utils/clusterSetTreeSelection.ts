@@ -2,7 +2,7 @@ import { CLUSTER_LIST_FILTER_TYPE } from '@kubevirt-utils/utils/constants';
 import { universalComparator } from '@kubevirt-utils/utils/utils';
 import { type TreeViewDataItem } from '@patternfly/react-core';
 
-import { CLUSTER_SET_SELECTOR_PREFIX } from './constants';
+import { CLUSTER_SELECTOR_PREFIX, CLUSTER_SET_SELECTOR_PREFIX } from './constants';
 
 type TreeViewDataItemWithHref = { href?: string } & TreeViewDataItem;
 
@@ -10,7 +10,13 @@ const sortClusterNames = (clusterNames: string[]): string[] =>
   [...clusterNames].sort((a, b) => universalComparator(a, b));
 
 const getClusterNamesFromSetItem = (item: TreeViewDataItem): string[] =>
-  (item.children ?? []).map((child) => child.name as string).filter(Boolean);
+  (item.children ?? []).reduce<string[]>((clusterNames, child) => {
+    const clusterName = child.id?.replace(`${CLUSTER_SELECTOR_PREFIX}/`, '');
+    if (!clusterName) {
+      return clusterNames;
+    }
+    return [...clusterNames, clusterName];
+  }, []);
 
 export const clusterNamesMatchSorted = (left: string[], right: string[]): boolean => {
   if (left.length !== right.length) {
